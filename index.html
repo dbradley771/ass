@@ -263,7 +263,6 @@
 			.complete .yes-image {
 				display: block;
 			}
-			
 		</style>
 	</head>
 	<body>
@@ -271,7 +270,7 @@
 			<h1>2015 <span style="display:inline-block;">Achievement Secret Santa</span></h1>
 			<p>Welcome to the 2015 Achievement Secret Santa page! Below you will find all of the participates, links to their Steam account, the achievement they need to achieve, and who caused their misery. Clicking on the participant's name will take you to a live stream of the game they are playing. Clicking the Steam badge will take you to their Steam profile. Click the achievement will take you to a list of all achievements the achieved in that game so far. Clicking the percentage will take you to a list of all achievements for the game and the percent of people that have achieved those achievements. Good luck!</p>
 		</header>
-		<table>
+		<table class="tableData">
 			<tr>
 				<th>Name</th>
 				<th>Steam</th>
@@ -367,7 +366,7 @@
 				</td>
 				<td>Matthew</td>
 			</tr>
-			<tr class="complete">
+			<tr class="">
 				<td><a target="_blank" href="http://steamcommunity.com/broadcast/watch/76561198065607392/">Halton</a></td>
 				<td><a target="_blank" href="http://steamcommunity.com/profiles/76561198065607392"><img src="http://steamsignature.com/status/english/76561198065607392.png" alt="" title="" /></a></td>
 				<td>
@@ -457,7 +456,7 @@
 				</td>
 				<td>Aaron</td>
 			</tr>
-			<tr class="complete">
+			<tr class="">
 				<td><a target="_blank" href="http://steamcommunity.com/broadcast/watch/76561198042113051/">Tom</a></td>
 				<td><a target="_blank" href="http://steamcommunity.com/profiles/76561198042113051/"><img src="http://steamsignature.com/status/english/76561198042113051.png" alt="" title="" /></a></td>
 				<td>
@@ -521,5 +520,59 @@
 		<footer>
 			Copyright 2015 David Bradley
 		</footer>
+		<script>
+			/*					Aaron					David					Eric					Halton					Kevin					Matthew					Tom						Zach*/
+			var userids = 		["76561198012592891",	"76561198070546779",	"76561198025352803",	"76561198065607392",	"76561198045936277",	"76561198063404282",	"76561198042113051",	"76561198076571055"]
+			var appids = 		["3830",				"28050",				"250900",				"206420",				"246840",				"311340",				"550",					"215530"];
+			var achivementids = [12,					9,						38,						45,						8,						8,						30,						64];
+			
+			var tables = document.getElementsByClassName('tableData');
+			var rows = tables[0].getElementsByTagName('tr');
+
+			var key = "6B2130CA62D01E06B28C1D466102E26C";
+
+			function getJSON(url) {
+				var script = document.createElement('script');
+				script.setAttribute('src', url);
+				script.setAttribute('type', 'text/javascript');
+				document.getElementsByTagName('head')[0].appendChild(script);
+			}
+
+			function cbfunc(json, user, achivement) {
+				if (json.query.count) {
+					var oneOrZero = json.query.results.playerstats.achievements[achivement].achieved;
+					if(oneOrZero == 1) {
+						rows[user+1].classList.add("complete");
+					}
+				} else {
+					return false;
+				}
+			}
+			
+			function cbfunc0(json) { userid = 0; cbfunc(json, userid, achivementids[userid]); }
+			function cbfunc1(json) { userid = 1; cbfunc(json, userid, achivementids[userid]); }
+			function cbfunc2(json) { userid = 2; cbfunc(json, userid, achivementids[userid]); }
+			function cbfunc3(json) { userid = 3; cbfunc(json, userid, achivementids[userid]); }
+			function cbfunc4(json) { userid = 4; cbfunc(json, userid, achivementids[userid]); }
+			function cbfunc5(json) { userid = 5; cbfunc(json, userid, achivementids[userid]); }
+			function cbfunc6(json) { userid = 6; cbfunc(json, userid, achivementids[userid]); }
+			function cbfunc7(json) { userid = 7; cbfunc(json, userid, achivementids[userid]); }
+
+			function fetch(userid, steamid, appid) {
+				var url = "http://api.steampowered.com/ISteamUserStats/GetPlayerAchievements/v0001/?key=" + key + "&steamid=" + steamid + "&appid=" + appid;
+				var yql = "select * " + " from json" + " where url='" + url + "';";
+				yql = "http://query.yahooapis.com/v1/public/yql?q=" + encodeURIComponent(yql) + "&format=json" + "&callback=cbfunc" + userid;
+				return yql;
+			}
+
+			function isDone(userid, steamid, appid) {				
+				yURL = fetch(userid, steamid, appid);
+				getJSON(yURL);
+			}
+			
+			for(var i=0; i<userids.length; i +=1) {
+				isDone(i, userids[i], appids[i]);
+			}
+		</script>
 	</body>
 </html>
