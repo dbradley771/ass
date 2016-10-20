@@ -593,7 +593,7 @@
 			function fetch(userid, steamid, appid) {
 				var url = "http://api.steampowered.com/ISteamUserStats/GetPlayerAchievements/v0001/?key=" + key + "&steamid=" + steamid + "&appid=" + appid;
 				var yql = "select * " + " from json" + " where url='" + url + "';";
-				yql = "http://query.yahooapis.com/v1/public/yql?q=" + encodeURIComponent(yql) + "&format=json" + "&callback=cbfunc" + userid;
+				yql = "https://query.yahooapis.com/v1/public/yql?q=" + encodeURIComponent(yql) + "&format=json" + "&callback=cbfunc" + userid;
 				return yql;
 			}
 
